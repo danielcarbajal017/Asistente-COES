@@ -1,0 +1,12 @@
+# Instalar torch en versión CPU (liviana) — clave para que funcione en Streamlit Cloud
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.4.1
+
+streamlit==1.64.0
+llama-index==0.14.24
+llama-index-llms-groq==0.6.1
+llama-index-llms-google-genai==0.11.2
+llama-index-embeddings-huggingface==0.8.0
+sentence-transformers==3.4.1
+transformers==4.48.3
+pypdf==6.14.2

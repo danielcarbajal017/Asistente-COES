@@ -1,0 +1,19 @@
+# === LLAVES / SECRETOS — NUNCA subir a internet ===
+groq_key.txt
+google_key.txt
+.streamlit/secrets.toml
+*.key
+
+# === Python ===
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+
+# === Sistema / temporales ===
+.DS_Store
+Thumbs.db
+*.log
+
+# NOTA: data/ y vector_store/ SÍ se suben (son los documentos públicos y la memoria del bot).

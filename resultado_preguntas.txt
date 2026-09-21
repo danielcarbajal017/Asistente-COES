@@ -1,0 +1,47 @@
+======================================================================
+PREGUNTA: ¿Se mencionan montos o costos de inversión de los proyectos? Indica todas las cifras que encuentres.
+----------------------------------------------------------------------
+RESPUESTA:
+Sí, se citan los costos de inversión de varios proyectos. Las cifras que aparecen son:
+
+- **31 MUS $** (31 millones de dólares estadounidenses) – costo de inversión del proyecto de ampliación del subestación Armiño 220 kV.  
+- **425 MUS $** (425 millones de dólares estadounidenses) – costo de inversión del proyecto de enlace 500 kV Colcabamba‑Cieneguilla (incluye también la línea de 220 kV San Juan‑Cieneguilla y demás componentes).
+----------------------------------------------------------------------
+FUENTES:
+  1. pagina 11 | relevancia 0.556
+  2. pagina 163 | relevancia 0.528
+  3. pagina 41 | relevancia 0.503
+  4. pagina 9 | relevancia 0.495
+  5. pagina 145 | relevancia 0.487
+
+======================================================================
+PREGUNTA: ¿Cuáles son los principales proyectos de transmisión propuestos?
+----------------------------------------------------------------------
+RESPUESTA:
+Los proyectos más relevantes que forman parte de la propuesta de actualización del Plan de Transmisión son:
+
+- **Enlace 500 kV Colcabamba‑Cieneguilla y 220 kV San Juan‑Cieneguilla**, con transformador 500/220 kV de 750 MVA en la subestación de Cieneguilla.  
+- **Ampliación de la subestación Colcabamba** mediante la instalación de un segundo transformador 500/220 kV de 750 MVA.  
+- **Nuevo enlace de línea de transmisión (LT) 220 kV Antuquito Este‑Callahuanca (REP).**  
+- **Segundo circuito 500 kV del proyecto Poroma‑Ocoña‑San José.**  
+- **Proyecto de maniobras “Nueva Cantera” 220 kV.**  
+- **Segundo circuito 220 kV Carhuaquero‑Nueva Carhuaquero.**  
+- **Equipo Automático de Compensación Reactiva (EACR) en la subestación Carabayllo** (+ 350 / ‑ 350 MVAR).  
+- **Mejora de la confiabilidad en Piura:** enlace 220 kV Chutuque‑Chusis y subestaciones asociadas (Proyecto ITC).  
+- **Mejora de la confiabilidad en Bellavista‑Juanjuí:** enlace 220 kV Tarapoto Norte‑Nueva Florida, ampliaciones y subestaciones (Proyecto ITC).  
+- **Ampliación de la capacidad de transformación 220/60 kV en la subestación Huancavelica** (Proyecto ITC).  
+- **Enlace 500 kV Carabayllo‑Lima Norte** y sus ampliaciones y subestaciones (Proyecto ITC).  
+- **Enlace 500 kV Cieneguilla‑Lima Sur** y sus ampliaciones y subestaciones (Proyecto ITC).  
+- **Enlace 500 kV Lima Norte‑Lima Sur** de simple terna 1500 MVA, con ampliaciones asociadas (Proyecto ITC).  
+- **Mejora de la confiabilidad en Ilo:** enlace 138 kV Nueva Ilo‑Ilo ELS y ampliaciones (Proyecto ITC).  
+- **Mejora de la confiabilidad en Aguaytía‑Pucallpa:** segundo enlace 220 kV Aguaytía‑Shipibo y ampliaciones (Proyecto ITC).  
+- **Enlace 220 kV Yaros‑Huánuco Sur** y sus ampliaciones y subestaciones.  
+
+Además, dentro del horizonte estratégico se contempla la **interconexión 500 kV San José‑Yarabamba**, prevista para entrar en operación en 2028, y se ha estudiado una posible interconexión internacional de 500 kV con capacidad de hasta 1000 MW (aunque, según los últimos análisis, aún no se considera rentable). Estos proyectos, tanto los vinculantes como los de largo plazo, constituyen la columna vertebral de la expansión planificada del Sistema Troncal de Transmisión del SEIN para el periodo 2027‑2036.
+----------------------------------------------------------------------
+FUENTES:
+  1. pagina 38 | relevancia 0.616
+  2. pagina 148 | relevancia 0.596
+  3. pagina 182 | relevancia 0.58
+  4. pagina 35 | relevancia 0.58
+  5. pagina 150 | relevancia 0.573
