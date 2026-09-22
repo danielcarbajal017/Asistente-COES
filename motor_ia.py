@@ -70,11 +70,11 @@ def cargar_api_keys(secrets=None):
 
 
 def cargar_embeddings():
-    """Cerebro de búsqueda: corre en el servidor (sin límite de cuota), sirve a todos los usuarios."""
-    from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+    """Cerebro de búsqueda: FastEmbed (ONNX, liviano, sin torch). Corre en el servidor
+    (sin límite de cuota), sirve a todos los usuarios y funciona en hosting gratis."""
+    from llama_index.embeddings.fastembed import FastEmbedEmbedding
 
-    cache_hf = os.path.join(os.path.expanduser("~"), ".cache", "huggingface", "hub")
-    return HuggingFaceEmbedding(model_name=MODELO_EMBED, cache_folder=cache_hf)
+    return FastEmbedEmbedding(model_name=MODELO_EMBED)
 
 
 def construir_lista_modelos():
