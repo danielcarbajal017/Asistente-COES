@@ -17,8 +17,9 @@ Ejecutar:  streamlit run app.py
 ============================================================
 """
 import base64
+import hashlib
+import io
 import os
-import tempfile
 
 import streamlit as st
 
@@ -186,19 +187,28 @@ def obtener_modelos_dict():
     return dict(motor_ia.construir_lista_modelos())
 
 
-def indexar_archivo_subido(uploaded_file):
+@st.cache_resource(show_spinner=False)
+def hashes_oficiales():
+    """Huellas (hash) de los PDF que YA están en la memoria oficial (carpeta data/)."""
+    huellas = {}
+    if os.path.exists("data"):
+        for p in Path("data").glob("*.pdf"):
+            huellas[hashlib.sha1(p.read_bytes()).hexdigest()] = p.name
+    return huellas
+
+
+@st.cache_resource(show_spinner=False)
+def indexar_pdf_cacheado(file_hash, _nombre, _contenido):
+    """Procesa un PDF subido y lo deja en caché (por su huella): si se vuelve a subir
+    el MISMO archivo, se reutiliza al instante en vez de reprocesarlo."""
     from pypdf import PdfReader
     from llama_index.core import Document, VectorStoreIndex
 
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
-        tmp.write(uploaded_file.getbuffer())
-        ruta = tmp.name
     docs = []
-    for num, pagina in enumerate(PdfReader(ruta).pages, start=1):
+    for num, pagina in enumerate(PdfReader(io.BytesIO(_contenido)).pages, start=1):
         texto = pagina.extract_text() or ""
         if texto.strip():
-            docs.append(Document(text=texto, metadata={"file_name": uploaded_file.name, "page_label": str(num)}))
-    os.unlink(ruta)
+            docs.append(Document(text=texto, metadata={"file_name": _nombre, "page_label": str(num)}))
     return VectorStoreIndex.from_documents(docs) if docs else None
 
 
@@ -348,10 +358,19 @@ with barra[0]:
         st.caption("Arrastra un PDF aquí o haz clic. Podrás preguntar también sobre él.")
         subido = st.file_uploader("PDF", type=["pdf"], label_visibility="collapsed")
         if subido is not None:
-            with st.spinner(f"Procesando {subido.name}..."):
-                st.session_state.extra_index = indexar_archivo_subido(subido)
-            st.success(f"✅ '{subido.name}' añadido.") if st.session_state.get("extra_index") \
-                else st.warning("Sin texto extraíble.")
+            contenido = subido.getvalue()
+            huella = hashlib.sha1(contenido).hexdigest()
+            if huella in hashes_oficiales():
+                # Ya está en la memoria oficial -> no reprocesar, usar la base directamente.
+                st.session_state.extra_index = None
+                st.info(f"📚 '{subido.name}' ya está en la base oficial. "
+                        "Pregunta directamente (sin reprocesar).")
+            else:
+                # PDF nuevo -> se procesa (y queda en caché por si se vuelve a subir).
+                with st.spinner(f"Procesando {subido.name}..."):
+                    st.session_state.extra_index = indexar_pdf_cacheado(huella, subido.name, contenido)
+                st.success(f"✅ '{subido.name}' añadido.") if st.session_state.get("extra_index") \
+                    else st.warning("Sin texto extraíble.")
 with barra[1]:
     prompt = st.chat_input("Escriba su consulta técnica sobre el Plan de Transmisión...",
                            disabled=st.session_state.cuota_agotada)
