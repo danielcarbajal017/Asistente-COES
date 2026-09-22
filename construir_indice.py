@@ -84,8 +84,11 @@ def main():
     index = VectorStoreIndex.from_documents(documentos, transformations=[splitter])
     print(f"[{time.time()-t0:.0f}s] índice construido")
 
-    # 3) Guardar en disco
+    # 3) Guardar en disco (+ firma de los documentos, para la auto-reconstrucción)
     index.storage_context.persist(CARPETA_MEMORIA)
+    (Path(CARPETA_MEMORIA) / "firma_datos.txt").write_text(
+        motor_ia.firma_datos(CARPETA_DATOS), encoding="utf-8"
+    )
     print(f"\n💾 Memoria guardada en la carpeta '{CARPETA_MEMORIA}/'.")
     print(f"[{time.time()-t0:.0f}s] LISTO. Ya puedes hacer preguntas con: python preguntar.py")
 

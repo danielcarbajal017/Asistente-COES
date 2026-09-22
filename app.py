@@ -20,6 +20,7 @@ import base64
 import hashlib
 import io
 import os
+from pathlib import Path
 
 import streamlit as st
 
@@ -173,13 +174,49 @@ st.markdown(
 # ==================================================================
 @st.cache_resource(show_spinner="⏳ Cargando la memoria del asistente...")
 def cargar_base():
-    from llama_index.core import Settings, StorageContext, load_index_from_storage
+    """Carga la memoria guardada. Si los documentos de data/ cambiaron (o no hay
+    memoria), la reconstruye AUTOMÁTICAMENTE. Así basta con agregar/quitar PDF en
+    data/ y subir a GitHub: la app se actualiza sola, sin ejecutar scripts."""
+    from llama_index.core import (
+        Settings, StorageContext, VectorStoreIndex, load_index_from_storage,
+    )
+    from llama_index.core.node_parser import SentenceSplitter
 
     Settings.embed_model = motor_ia.cargar_embeddings()
-    if not os.path.exists(motor_ia.CARPETA_MEMORIA):
+
+    firma_actual = motor_ia.firma_datos()
+    firma_file = Path(motor_ia.CARPETA_MEMORIA) / "firma_datos.txt"
+    firma_guardada = firma_file.read_text(encoding="utf-8") if firma_file.exists() else None
+
+    # Si hay memoria y coincide con los documentos actuales -> cargar (rápido).
+    if os.path.exists(motor_ia.CARPETA_MEMORIA) and firma_guardada == firma_actual:
+        storage = StorageContext.from_defaults(persist_dir=motor_ia.CARPETA_MEMORIA)
+        return load_index_from_storage(storage)
+
+    # Si no, reconstruir desde data/ (cuando se agregaron/cambiaron documentos).
+    documentos = _cargar_pdfs_de_data()
+    if not documentos:
         return None
-    storage = StorageContext.from_defaults(persist_dir=motor_ia.CARPETA_MEMORIA)
-    return load_index_from_storage(storage)
+    splitter = SentenceSplitter(chunk_size=1024, chunk_overlap=200)
+    index = VectorStoreIndex.from_documents(documentos, transformations=[splitter])
+    index.storage_context.persist(motor_ia.CARPETA_MEMORIA)
+    firma_file.write_text(firma_actual, encoding="utf-8")
+    return index
+
+
+def _cargar_pdfs_de_data(carpeta="data"):
+    """Lee todos los PDF de data/, un documento por página con su número de página."""
+    from pypdf import PdfReader
+    from llama_index.core import Document
+
+    documentos = []
+    for pdf_path in sorted(Path(carpeta).glob("*.pdf")):
+        for num, pagina in enumerate(PdfReader(str(pdf_path)).pages, start=1):
+            texto = pagina.extract_text() or ""
+            if texto.strip():
+                documentos.append(Document(text=texto,
+                                           metadata={"file_name": pdf_path.name, "page_label": str(num)}))
+    return documentos
 
 
 @st.cache_resource(show_spinner=False)

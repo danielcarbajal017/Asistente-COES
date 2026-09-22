@@ -69,6 +69,14 @@ def cargar_api_keys(secrets=None):
     return {"groq": bool(groq), "gemini": bool(google)}
 
 
+def firma_datos(carpeta="data"):
+    """Huella del conjunto de documentos (nombre+tamaño). Si cambia, hay que reconstruir."""
+    items = []
+    for p in sorted(Path(carpeta).glob("*.pdf")):
+        items.append(f"{p.name}:{p.stat().st_size}")
+    return "|".join(items)
+
+
 def cargar_embeddings():
     """Cerebro de búsqueda: FastEmbed (ONNX, liviano, sin torch). Corre en el servidor
     (sin límite de cuota), sirve a todos los usuarios y funciona en hosting gratis."""
