@@ -45,7 +45,7 @@ def cargar_pdfs(carpeta=CARPETA_DATOS):
         lector = PdfReader(str(pdf_path))
         paginas_con_texto = 0
         for num, pagina in enumerate(lector.pages, start=1):
-            texto = pagina.extract_text() or ""
+            texto = motor_ia.limpiar_pagina(pagina.extract_text() or "")
             if texto.strip():
                 documentos.append(
                     Document(

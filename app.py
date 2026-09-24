@@ -212,7 +212,7 @@ def _cargar_pdfs_de_data(carpeta="data"):
     documentos = []
     for pdf_path in sorted(Path(carpeta).glob("*.pdf")):
         for num, pagina in enumerate(PdfReader(str(pdf_path)).pages, start=1):
-            texto = pagina.extract_text() or ""
+            texto = motor_ia.limpiar_pagina(pagina.extract_text() or "")
             if texto.strip():
                 documentos.append(Document(text=texto,
                                            metadata={"file_name": pdf_path.name, "page_label": str(num)}))

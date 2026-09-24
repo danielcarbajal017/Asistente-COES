@@ -13,18 +13,46 @@ from pathlib import Path
 CARPETA_MEMORIA = "vector_store"
 # Cerebro de búsqueda LOCAL-en-el-servidor (sin límite de cuota; sirve a todos los usuarios).
 MODELO_EMBED = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
-TOP_K = 6  # cuántos trozos de contexto usar por pregunta
+TOP_K = 10  # cuántos trozos de contexto usar por pregunta (más = más completo)
+
+# Líneas de encabezado/pie que se repiten en casi todas las páginas y no aportan
+# información: se eliminan al leer para que no ensucien la búsqueda.
+BOILERPLATE = [
+    "DIRECCIÓN DE PLANIFICACIÓN DE TRANSMISIÓN",
+    "PROPUESTA DEFINITIVA DE ACTUALIZACIÓN DEL PLAN DE TRANSMISIÓN",
+    "Actualización del Plan de Transmisión 2027-2036",
+    "Informe COES/DP-01-2026",
+    "SETIEMBRE-2026",
+    "SETIEMBRE 2026",
+]
+
+
+def limpiar_pagina(texto):
+    """Quita las líneas de encabezado/pie repetidas para que no ensucien la búsqueda."""
+    lineas = []
+    for ln in texto.split("\n"):
+        s = ln.strip()
+        if not s:
+            continue
+        if any(b.lower() in s.lower() for b in BOILERPLATE):
+            continue
+        lineas.append(ln)
+    return "\n".join(lineas)
 
 # Instrucción de VERACIDAD: el modelo responde SOLO con el contexto.
 PROMPT_VERAZ = (
     "Eres un asistente experto en el Plan de Transmisión eléctrica del COES (Perú).\n"
     "Responde la pregunta del usuario USANDO ÚNICAMENTE la información del contexto de abajo.\n\n"
-    "Reglas estrictas:\n"
-    "- Si la respuesta NO está en el contexto, di exactamente: 'No encontré esa información en los "
-    "documentos disponibles.' No inventes ni uses conocimiento externo.\n"
+    "Reglas:\n"
+    "- Puedes RAZONAR y COMBINAR datos de distintos fragmentos del contexto para responder "
+    "(por ejemplo, confirmar que dos proyectos aparecen, aunque estén en fragmentos separados).\n"
+    "- Si la pregunta pide confirmar algo y el contexto lo respalda (aunque sea en partes), "
+    "confírmalo y explica con los datos.\n"
+    "- Solo si la respuesta NO está en absoluto en el contexto, di exactamente: "
+    "'No encontré esa información en los documentos disponibles.' Nunca inventes ni uses "
+    "conocimiento externo.\n"
     "- Responde en español, de forma clara, técnica y ordenada.\n"
-    "- Cuando cites cifras (MW, GWh, MVA, US$, fechas), tómalas EXACTAMENTE del contexto.\n"
-    "- Sé conciso pero completo.\n\n"
+    "- Cuando cites cifras (MW, GWh, MVA, US$, fechas), tómalas EXACTAMENTE del contexto.\n\n"
     "Contexto:\n"
     "---------------------\n"
     "{context_str}\n"
